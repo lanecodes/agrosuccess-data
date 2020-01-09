@@ -1,0 +1,6 @@
+# Python fluff
+*/.ipynb_checkpoints
+
+# Generaged data/ temporary files
+outputs/
+tmp/

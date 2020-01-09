@@ -1,0 +1,22 @@
+name: as_data
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - pip
+  - requests
+  - ipdb
+  - matplotlib
+  - pandas
+  - geopandas
+  - descartes
+  - gdal
+  - jupyterlab
+  - nbstripout
+  - pip:
+    - pytest
+    - mypy
+    - nlmpy
+    - elevation
+    - git+https://github.com/lanecodes/aemet-wind.git
+    - git+https://github.com/lanecodes/demproc.git

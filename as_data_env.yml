@@ -6,6 +6,7 @@ dependencies:
   - pip
   - requests
   - ipdb
+  - ipywidgets
   - matplotlib
   - pandas
   - geopandas
@@ -16,6 +17,7 @@ dependencies:
   - pip:
     - pytest
     - mypy
+    - unidecode
     - nlmpy
     - elevation
     - git+https://github.com/lanecodes/aemet-wind.git

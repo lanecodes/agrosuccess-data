@@ -8,6 +8,7 @@ dependencies:
   - ipdb
   - ipywidgets
   - matplotlib
+  - bokeh
   - pandas
   - geopandas
   - descartes

@@ -4,7 +4,6 @@ pollen:
 	echo "Extracting pollen data..."
 	[ -d tmp ] || mkdir tmp
 	git clone https://github.com/lanecodes/epd-query.git tmp/epd-query
-	cd epd-query
 	cp inputs/dumpall_epd_db.sql.gz tmp/epd-query/data/
 	cp inputs/epd_extract_config.yml tmp/epd-query/config/config.yml
 	cd tmp/epd-query; docker-compose up --abort-on-container-exit
@@ -14,6 +13,9 @@ pollen:
 	mv tmp/epd-query/outputs/site_pollen_abundance_ts.csv tmp/
 	cd tmp/epd-query; docker-compose down -v
 	sudo rm -rf tmp/epd-query
+	jupyter nbconvert --to python pollen-abundance/make_lct_timeseries.ipynb
+	ipython pollen-abundance/make_lct_timeseries.py
+	rm pollen-abundance/make_lct_timeseries.py
 
 dem:
 	jupyter nbconvert --to python dem-derived/download_site_elevation_data.ipynb
@@ -38,4 +40,6 @@ wind:
 clean:
 	rm -f dem-derived/download_site_elevation_data.py
 	rm -f wind/get_ssite_wind_data.py
+	rm -f pollen-abundance/make_lct_timeseries.py
 	sudo rm -rf tmp/epd-query
+	rm -f tmp/*

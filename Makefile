@@ -18,10 +18,11 @@ pollen:
 	rm pollen-abundance/make_lct_timeseries.py
 
 dem:
+	echo "Downloading DEM data and generating derived maps..."
 	jupyter nbconvert --to python dem-derived/download_site_elevation_data.ipynb
 	ipython dem-derived/download_site_elevation_data.py
+	python dem-derived/make_derived_layers.py
 	rm dem-derived/download_site_elevation_data.py
-	echo "dem not implemented"
 
 nlm:
 	python generate_landcover_maps.py
@@ -41,5 +42,6 @@ clean:
 	rm -f dem-derived/download_site_elevation_data.py
 	rm -f wind/get_ssite_wind_data.py
 	rm -f pollen-abundance/make_lct_timeseries.py
+	rm -f dem-derived/download_site_elevation_data.py
 	sudo rm -rf tmp/epd-query
 	rm -f tmp/*

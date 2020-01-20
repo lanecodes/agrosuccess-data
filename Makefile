@@ -25,8 +25,8 @@ dem:
 	rm dem-derived/download_site_elevation_data.py
 
 nlm:
-	python generate_landcover_maps.py
-	echo "nlm not implemented"
+	echo "Generating nautral land scape models for initial conditions..."
+	python landcover-nlms/generate_landcover_maps.py
 
 precipitation:
 	python precipitation/extract_mean_precipitation.py

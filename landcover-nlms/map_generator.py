@@ -2,6 +2,8 @@
 """
 Base class used by things which generate maps based a geotiff file as a template.
 """
+import logging
+
 from osgeo import gdal, osr
 
 class MapGenerator(object):
@@ -29,9 +31,9 @@ class MapGenerator(object):
     @property
     def template_data(self):
         try:
-            template = gdal.Open(self._template_tif)
+            template = gdal.Open(str(self._template_tif))
         except IOError as e:
-            print self._template_tif + ' couldn\'t be read'
+            logging.error(self._template_tif + ' couldn\'t be read')
             raise
 
         band = template.GetRasterBand(1)
@@ -59,9 +61,9 @@ class MapGenerator(object):
         metadata = {}
 
         try:
-            template = gdal.Open(template_tif)
+            template = gdal.Open(str(template_tif))
         except IOError as e:
-            print template_tif + ' couldn\'t be read'
+            logging.error(template_tif + ' couldn\'t be read')
             raise
 
         arr = template.GetRasterBand(1).ReadAsArray()

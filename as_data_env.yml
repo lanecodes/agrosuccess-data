@@ -5,11 +5,13 @@ dependencies:
   - python=3.7
   - pip
   - requests
+  - beautifulsoup4
   - ipdb
   - ipywidgets
   - matplotlib
   - bokeh
   - pandas
+  - lxml
   - geopandas
   - descartes
   - gdal

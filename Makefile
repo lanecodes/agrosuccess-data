@@ -28,12 +28,11 @@ nlm:
 	echo "Generating nautral land scape models for initial conditions..."
 	python landcover-nlms/generate_landcover_maps.py
 
-precipitation:
+precip:
+	echo "Extracting precipitation data for sites"
 	python precipitation/extract_mean_precipitation.py
-	echo "precipitation not implemented"
 
 wind:
-# TODO check where data output t0
 	jupyter nbconvert --to python wind/get_ssite_wind_data.ipynb
 	ipython wind/get_ssite_wind_data.py
 	rm wimd/get_ssite_wind_data.py

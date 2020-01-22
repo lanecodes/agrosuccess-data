@@ -34,20 +34,51 @@ def build_all_data_df(output_root_dir: Path) -> pd.DataFrame:
         .set_index('sitecode')
         .mean(1)  # Series containing mean taken across the year for each site
         .rename('mean_precip')
+        .round(decimals=0)
+        .astype(int)
     )
 
-    site_grid_cell_dims_df = pd.DataFrame.from_dict({
-        site_code: read_grid_cell_dimensions(
-            output_root_dir / site_code / 'hydrocorrect_dem.tif'
-        ) for site_code in site_loc_df.index
-    }, orient='index').rename(lambda name: 'cell_size_' + name, axis=1)
+    wind_dir_df = (
+        pd.read_csv(output_root_dir / 'site_wind_dir_probs.csv')
+        .assign(sitecode=lambda df: sitename_to_sitecode(df['sitename']))
+        .drop(columns='sitename')
+        .set_index('sitecode')
+        .rename(lambda x: 'wind_dir_' + x, axis=1)
+        .round(decimals=6)
+    )
 
-    select_cols = ['sitename', 'elevation', 'latdd', 'londd', 'easting',
-                   'northing', 'cell_size_x', 'cell_size_y', 'mean_precip']
+    wind_speed_df = (
+        pd.read_csv(output_root_dir / 'site_wind_speed_class_prob.csv')
+        .assign(sitecode=lambda df: sitename_to_sitecode(df['sitename']))
+        .drop(columns='sitename')
+        .set_index('sitecode')
+        .rename(lambda x: 'wind_speed_' + x, axis=1)
+        .round(decimals=6)
+    )
+
+    site_grid_cell_dims_df = (
+        pd.DataFrame.from_dict({
+            site_code: read_grid_cell_dimensions(
+                output_root_dir / site_code / 'hydrocorrect_dem.tif'
+            ) for site_code in site_loc_df.index
+        }, orient='index')
+        .rename(lambda name: 'cell_size_' + name, axis=1)
+        .round(decimals=2)
+    )
+
+    select_cols = (
+        ['sitename', 'elevation', 'latdd', 'londd', 'easting',
+         'northing', 'cell_size_x', 'cell_size_y', 'mean_precip']
+        + ['wind_dir_' + x for x in 'N|NE|E|SE|S|SW|W|NW'.split('|')]
+        + ['wind_speed_' + x for x in ('low', 'medium', 'high')]
+    )
 
     return (
         site_loc_df
-        .join(site_precip_s).join(site_grid_cell_dims_df)
+        .join(site_precip_s)
+        .join(wind_dir_df)
+        .join(wind_speed_df)
+        .join(site_grid_cell_dims_df)
         .loc[:, select_cols]
     )
 
@@ -70,7 +101,7 @@ def make_easting_northing_df(site_loc_df: pd.DataFrame) -> pd.DataFrame:
         .values.tolist(),
         index=site_loc_df.index,
         columns=['easting', 'northing']
-    )
+    ).round(decimals=2)
 
 
 def to_madrid1870(lat: float, lon: float):
@@ -118,6 +149,16 @@ def site_data_to_xml(site_s: pd.Series) -> bytes:
     climate = etree.SubElement(root, 'climate')
     precip = etree.SubElement(climate, 'meanMonthlyPrecipitation', units='mm')
     precip.text = site_s['mean_precip']
+
+    wind = etree.SubElement(climate, 'wind')
+    wind_direction = etree.SubElement(wind, 'direction')
+    for direction in 'N|NE|E|SE|S|SW|W|NW'.split('|'):
+        col_name = 'wind_dir_' + direction
+        etree.SubElement(wind_direction, direction).text = site_s[col_name]
+    wind_speed = etree.SubElement(wind, 'speed')
+    for speed in ['low', 'medium', 'high']:
+        col_name = 'wind_speed_' + speed
+        etree.SubElement(wind_speed, speed).text = site_s[col_name]
 
     geographic = etree.SubElement(root, 'geographic')
     elev = etree.SubElement(geographic, 'elevation', units='m')

@@ -32,11 +32,11 @@ precip:
 	@echo "Extracting precipitation data for sites..."
 	python precipitation/extract_mean_precipitation.py
 
-wind:
+wind_dat:
 	@echo "Downloading and processing wind data..."
 	jupyter nbconvert --to python wind/get_ssite_wind_data.ipynb
 	ipython wind/get_ssite_wind_data.py
-	rm wimd/get_ssite_wind_data.py
+	rm wind/get_ssite_wind_data.py
 
 xml:
 	@echo "Generating site-specific xml files..."

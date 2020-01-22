@@ -1,14 +1,19 @@
+# Editor fluff
+.vscode/
+
 # Python fluff
 */.ipynb_checkpoints/*
 */__pycache__/*
+.mypy_cache/
 
 # Generaged data/ temporary files
 outputs/
 tmp/
 
 # Input data not included in repo
-## Download from EPD website
+## Download from EPD and UN websites
 inputs/dumpall_epd_db.sql.gz
+inputs/UNdata_Export_20191205_131516780.zip
 
 # Other miscellaneous data used in notebooks not included in repo
 landcover-nlms/data

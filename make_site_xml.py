@@ -15,7 +15,8 @@ import unidecode
 from pyproj import Proj, transform
 from osgeo import gdal
 
-import lxml.etree as etree
+import xml.etree.ElementTree as etree
+from xml.dom import minidom
 
 GridCellDims = namedtuple('GridCellDims', ['x', 'y'])
 
@@ -132,10 +133,9 @@ def write_site_xml(site_s: pd.Series, output_dir_root: Path) -> None:
     """Write site data as an XML file."""
     site_code = site_s.name
     out_file = output_dir_root / site_code / 'site_parameters.xml'
-    xml_str = ('<?xml version="1.0" encoding="UTF-8"?>\n'
-                + site_data_to_xml(site_s).decode('utf-8'))
+    xml_str = site_data_to_xml(site_s).decode('utf-8')
     with open(out_file, 'w', encoding='utf-8') as f:
-        f.write(xml_str)
+        f.write(minidom.parseString(xml_str).toprettyxml(indent="  "))
 
 
 def site_data_to_xml(site_s: pd.Series) -> bytes:
@@ -151,11 +151,11 @@ def site_data_to_xml(site_s: pd.Series) -> bytes:
     precip.text = site_s['mean_precip']
 
     wind = etree.SubElement(climate, 'wind')
-    wind_direction = etree.SubElement(wind, 'direction')
+    wind_direction = etree.SubElement(wind, 'directionProb')
     for direction in 'N|NE|E|SE|S|SW|W|NW'.split('|'):
         col_name = 'wind_dir_' + direction
         etree.SubElement(wind_direction, direction).text = site_s[col_name]
-    wind_speed = etree.SubElement(wind, 'speed')
+    wind_speed = etree.SubElement(wind, 'speedProb')
     for speed in ['low', 'medium', 'high']:
         col_name = 'wind_speed_' + speed
         etree.SubElement(wind_speed, speed).text = site_s[col_name]
@@ -178,10 +178,11 @@ def site_data_to_xml(site_s: pd.Series) -> bytes:
     px_y = etree.SubElement(raster, 'gridCellPixelSizeY', units='m')
     px_y.text = site_s['cell_size_y']
 
-    return etree.tostring(root, pretty_print=True)
+    return etree.tostring(root, encoding='utf-8')
 
 
 if __name__ == '__main__':
     OUTPUT_ROOT_DIR = Path('outputs')
     master_df = build_all_data_df(OUTPUT_ROOT_DIR)
+    test = site_data_to_xml(master_df.loc['navarres'])
     master_df.apply(write_site_xml, output_dir_root=OUTPUT_ROOT_DIR, axis=1)

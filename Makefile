@@ -1,7 +1,7 @@
 # Activate the as_data environment in your shell first before calling:
 # $ make all
 pollen:
-	echo "Extracting pollen data..."
+	@echo "Extracting pollen data..."
 	[ -d tmp ] || mkdir tmp
 	git clone https://github.com/lanecodes/epd-query.git tmp/epd-query
 	cp inputs/dumpall_epd_db.sql.gz tmp/epd-query/data/
@@ -18,24 +18,29 @@ pollen:
 	rm pollen-abundance/make_lct_timeseries.py
 
 dem:
-	echo "Downloading DEM data and generating derived maps..."
+	@echo "Downloading DEM data and generating derived maps..."
 	jupyter nbconvert --to python dem-derived/download_site_elevation_data.ipynb
 	ipython dem-derived/download_site_elevation_data.py
 	python dem-derived/make_derived_layers.py
 	rm dem-derived/download_site_elevation_data.py
 
 nlm:
-	echo "Generating nautral land scape models for initial conditions..."
+	@echo "Generating nautral land scape models for initial conditions..."
 	python landcover-nlms/generate_landcover_maps.py
 
 precip:
-	echo "Extracting precipitation data for sites"
+	@echo "Extracting precipitation data for sites..."
 	python precipitation/extract_mean_precipitation.py
 
 wind:
+	@echo "Downloading and processing wind data..."
 	jupyter nbconvert --to python wind/get_ssite_wind_data.ipynb
 	ipython wind/get_ssite_wind_data.py
 	rm wimd/get_ssite_wind_data.py
+
+xml:
+	@echo "Generating site-specific xml files..."
+	python make_site_xml.py
 
 clean:
 	rm -f dem-derived/download_site_elevation_data.py

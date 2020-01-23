@@ -42,6 +42,10 @@ xml:
 	@echo "Generating site-specific xml files..."
 	python make_site_xml.py
 
+test_data:
+	@echo "Generating data for testing AgroSuccess..."
+	python make_geo_test_data.py
+
 clean:
 	rm -f dem-derived/download_site_elevation_data.py
 	rm -f wind/get_ssite_wind_data.py

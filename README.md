@@ -46,6 +46,7 @@ make nlm
 make precip
 make wind
 make xml
+make test
 ```
 
 ## Dependencies

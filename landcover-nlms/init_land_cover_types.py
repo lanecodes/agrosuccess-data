@@ -23,6 +23,8 @@ RandomLandscapeGenerator uses DEM template combined with land cover proportion
 constraints to generate a random landscape using the NLMpy methods
 randomClusterNN and classifyArray.
 """
+import logging
+
 import numpy as np
 from osgeo import gdal
 from nlmpy import nlmpy
@@ -30,6 +32,19 @@ from nlmpy import nlmpy
 from map_generator import MapGenerator
 
 class LandscapeCoverage(object):
+    """Land cover type coverage of a landscape.
+
+    Attributes
+    ----------
+    landcover_array: numpy.ndarray
+        int64 array specifying landcover types.
+    geo_transform: tuple
+        Geographical transform information corresponding to that returned
+        by GDAL's `GetGeoTransform` function.
+    projection: str
+        Geogrphic projection corresponding to that returned by GDAL's
+        `GetProjection` function.
+    """
 
     def __init__(self, landcover_array, geo_transform, projection,
                  upland_array=None):
@@ -37,11 +52,11 @@ class LandscapeCoverage(object):
         self.geo_transform = geo_transform
         self.projection = projection
 
-        # boolean numpy array, true in upland cells, false in lowland
         self._upland_array = upland_array
 
     @property
     def upland_array(self):
+        """Boolean array true un upland cells, false in lowland."""
         return self._upland_array
 
     @upland_array.setter
@@ -348,7 +363,7 @@ class RandomLandcoverGenerator(MapGenerator):
                 best_landscape = landscape
                 improvement_counter += 1
 
-        print(f'Improved landscape {improvement_counter} times over '
-              f'{iterations} iterations')
+        logging.info(f'Improved landscape {improvement_counter} times over '
+                     f'{iterations} iterations')
 
         return best_landscape

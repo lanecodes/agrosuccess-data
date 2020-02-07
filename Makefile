@@ -28,9 +28,10 @@ nlm:
 	@echo "Generating nautral land scape models for initial conditions..."
 	python landcover-nlms/generate_landcover_maps.py
 
-precip:
-	@echo "Extracting precipitation data for sites..."
-	python precipitation/extract_mean_precipitation.py
+climate:
+	@echo "Extracting precipitation and temperature data for sites..."
+	python climate/extract_mean_precipitation.py
+	python climate/total_precip_and_temp.py
 
 wind_dat:
 	@echo "Downloading and processing wind data..."

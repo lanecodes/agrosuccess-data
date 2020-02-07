@@ -43,7 +43,7 @@ data is to run the following:
 make pollen
 make dem
 make nlm
-make precip
+make climate
 make wind
 make xml
 make test

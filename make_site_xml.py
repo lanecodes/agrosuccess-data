@@ -34,9 +34,19 @@ def build_all_data_df(output_root_dir: Path) -> pd.DataFrame:
         pd.read_csv(output_root_dir / 'site_precipitation.csv')
         .set_index('sitecode')
         .mean(1)  # Series containing mean taken across the year for each site
-        .rename('mean_precip')
+        .rename('monthly_mean_precip')
         .round(decimals=0)
         .astype(int)
+    )
+
+    site_annual_precip_and_temp_df = (
+        pd.read_csv(output_root_dir / 'tot_precip_mean_temp.csv')
+        .assign(sitecode=lambda df: sitename_to_sitecode(df['sitename']))
+        .drop(columns='sitename')
+        .set_index('sitecode')
+        .assign(annual_precip_mm=lambda df: (
+            df['annual_precip_mm'].round(decimals=0).astype(int)
+        ))
     )
 
     wind_dir_df = (
@@ -69,7 +79,8 @@ def build_all_data_df(output_root_dir: Path) -> pd.DataFrame:
 
     select_cols = (
         ['sitename', 'elevation', 'latdd', 'londd', 'easting',
-         'northing', 'cell_size_x', 'cell_size_y', 'mean_precip']
+         'northing', 'cell_size_x', 'cell_size_y', 'monthly_mean_precip',
+         'annual_precip_mm', 'mean_temp_degc']
         + ['wind_dir_' + x for x in 'N|NE|E|SE|S|SW|W|NW'.split('|')]
         + ['wind_speed_' + x for x in ('low', 'medium', 'high')]
     )
@@ -77,6 +88,7 @@ def build_all_data_df(output_root_dir: Path) -> pd.DataFrame:
     return (
         site_loc_df
         .join(site_precip_s)
+        .join(site_annual_precip_and_temp_df)
         .join(wind_dir_df)
         .join(wind_speed_df)
         .join(site_grid_cell_dims_df)
@@ -147,8 +159,15 @@ def site_data_to_xml(site_s: pd.Series) -> bytes:
     etree.SubElement(root, 'siteCode').text = site_s.name
 
     climate = etree.SubElement(root, 'climate')
-    precip = etree.SubElement(climate, 'meanMonthlyPrecipitation', units='mm')
-    precip.text = site_s['mean_precip']
+    monthly_precip = etree.SubElement(climate, 'meanMonthlyPrecipitation',
+                                      units='mm')
+    monthly_precip.text = site_s['monthly_mean_precip']
+    annual_precip = etree.SubElement(climate, 'meanAnnualPrecipitation',
+                                     units='mm')
+    annual_precip.text = site_s['annual_precip_mm']
+    mean_annual_temp = etree.SubElement(climate, 'meanAnnualTemperature',
+                                        units='°C')
+    mean_annual_temp.text = site_s['mean_temp_degc']
 
     wind = etree.SubElement(climate, 'wind')
     wind_direction = etree.SubElement(wind, 'directionProb')

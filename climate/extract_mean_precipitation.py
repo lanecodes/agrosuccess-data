@@ -66,7 +66,7 @@ def extract_precip_data_df(site_loc_df: pd.DataFrame,
             for site in site_loc_df.index:
                 month_num = _extract_month_from_filename(tif_file)
                 lat, lon = site_loc_df.loc[site, ['latdd', 'londd']]
-                precip = _extract_monthly_precip_from_file(
+                precip = extract_value_for_point_from_file(
                     str(tmpdir / tif_file), lat, lon
                 )
                 site_precip_df.loc[site, month_num] = precip
@@ -91,15 +91,9 @@ def _extract_month_from_filename(fname):
     return  str(fname[7:].split('.tif')[0])
 
 
-def _extract_monthly_precip_from_file(fname: str, lat: float,
+def extract_value_for_point_from_file(fname: str, lat: float,
                                       lon: float) -> float:
-    """Return Holocene average precipitation for given month and coordinates.
-
-    Each file is average monthly precipitation varying across space.
-
-    This function extracts the annual monthly precipitation for a specific
-    location corresponding to the month represented by the file `fname`.
-    """
+    """Return value of GeoTiff file for given coordinates."""
     res = check_output(
          f'gdallocationinfo -xml -wgs84 {fname} {lon} {lat}', shell=True
     )
@@ -110,9 +104,9 @@ def _extract_monthly_precip_from_file(fname: str, lat: float,
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     pwd = os.getcwd().split('/')[-1]
-    OUTPUT_DIR_ROOT = (Path('../outputs') if pwd == 'precipitation'
+    OUTPUT_DIR_ROOT = (Path('../outputs') if pwd == 'climate'
                        else Path('outputs'))
-    TMP_DIR = Path('../tmp') if pwd == 'precipitation' else Path('tmp')
+    TMP_DIR = Path('../tmp') if pwd == 'climate' else Path('tmp')
 
     PRECIP_DATA_URL = ('http://biogeo.ucdavis.edu/data/climate/cmip5/mid/'
                        'bcmidpr_30s.zip')

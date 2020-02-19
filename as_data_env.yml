@@ -26,3 +26,4 @@ dependencies:
     - elevation
     - git+https://github.com/lanecodes/aemet-wind.git
     - git+https://github.com/lanecodes/demproc.git
+    - git+https://bitbucket.org/ajlane50/agrosuccess-lib.git

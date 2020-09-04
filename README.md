@@ -3,6 +3,15 @@
 This project contains all the code needed to generate the input data for the
 study sites considered in the AgroSuccess model.
 
+## Dependencies
+
+In addition to the dependencies installed in the Setup section below, you will
+also need to have the following installed
+
+- `mpiexec` on Ubuntu this is provided by the `mpich` package.
+- `gdal-bin`
+- [TauDEM](https://hydrology.usu.edu/taudem/taudem5/index.html)
+
 ## Setup
 
 Create a virtual environment with required dependencies

@@ -39,9 +39,9 @@ gtiff_from_array("hydro_incorrect_dummy.tif",
 make_dummy_hydro_incorrect_dem("dummy_3x3_hydro_incorrect_dem.tif")
 demproc.derive_all("dummy_3x3_hydro_incorrect_dem.tif", "dummy_3x3")
 
-# Write lct map, mix of pine (6) , oak (9) and burnt(1)
+# Write lct map, mix of pine (5) , oak (8) and burnt(1)
 gtiff_from_array("dummy_3x3_lct_oak_pine_burnt.tif",
-    np.array([[6, 6, 1], [1, 1, 1], [9, 9, 9]]))
+    np.array([[5, 5, 1], [1, 1, 1], [8, 8, 8]]))
 
 # write soil type map, all type A soil
 gtiff_from_array("dummy_3x3_soil_type_uniform_A.tif", np.zeros((3, 3)))
@@ -54,13 +54,12 @@ gtiff_from_array("dummy_3x3_succession_state_mix.tif",
 # Used to test error is thrown if a grid within unexpected dimensions is loaded
 # into AgroSuccess
 gtiff_from_array("dummy_3x4_lct_oak_pine_burnt.tif",
-    np.array([[6, 6, 1, 1], [1, 1, 1, 1], [9, 9, 9, 9]]))
+    np.array([[5, 5, 1, 1], [1, 1, 1, 1], [8, 8, 8, 8]]))
 
 # --------------- 51 x 51 Test grids for integration testing ------------------
 # Generate larger versions of the 3x3 grids used for unit testing to facilitate
 # integration testing. This is done using `np.kron`. See
-# https://stackoverflow.com/questions/25676247/\
-# rescale-a-numpy-array#answer-25676285
+# https://stackoverflow.com/questions/25676247#answer-25676285
 SRC_FILES = [
     "dummy_3x3_binary_aspect.tif",
     "dummy_3x3_continuous_aspect.tif",

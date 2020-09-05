@@ -1,0 +1,81 @@
+---
+title: "Illustrative Pollen Diagram"
+author: "Andrew Lane"
+date: "2 April 2020"
+output: html_document
+---
+
+## Introduction
+
+In this notebook we plot a pollen diagram using the `rioja` package. The objective is to use a selection of pollen species for a specific study site to illustrate what a pollen diagram looks like in general, and to show what the signal of arrival of human agriculture might look like as a signal. Use the Navarres example which Carrion et al. 2010 show in their paper as inspiration.
+
+
+## Package to use
+
+See documentation for `rioja` [here][rioja-docs] and a blog post illustrating its use [here][rioja-blog].
+
+[rioja-docs]: https://cran.r-project.org/web/packages/rioja/rioja.pdf
+[rioja-blog]: https://www.benjaminbell.co.uk/2018/02/pollen-diagrams-in-r-using-rioja-part-1.html
+
+Install `rioja` if not already installed
+```{r install-rioja, results="hide"}
+if (!require("rioja", quietly = TRUE)) {
+  install.packages("rioja")
+  require("rioja")
+}
+```
+
+## Load data
+
+We use data prepared in the Jupyter notebook `make_pollen_abundance_timeseries.ipynb`. The data files for each study site are found in the file `../outputs/<sitecode>/selected_species_pol_pct.csv`.
+
+```{r}
+setwd('/home/andrew/AgroSuccess/agrosuccess-data/pollen-abundance')
+nav_data <- read.csv('../outputs/navarres/selected_species_pol_pct.csv')
+```
+
+Separate data from age before present tick labels
+```{r}
+earliest_date <- 12000
+nav_data <- nav_data[which(nav_data[, 1] < earliest_date), ]
+
+agebp <- nav_data$agebp
+nav_data$agebp <- NULL
+nav_data$Plantago <- NULL # Remove Plantago, all 0
+```
+
+```{r}
+max(nav_data$Pinus)
+```
+
+
+```{r}
+# rioja::strat.plot(ma.pollen1, yvar=y.scale, y.tks=y.scale, y.rev=TRUE, plot.line=FALSE, plot.poly=FALSE, plot.bar=TRUE, col.bar=p.col, lwd.bar=10, scale.percent=TRUE, xSpace=0.01, x.pc.lab=TRUE, x.pc.omit0=TRUE, las=2)
+
+rioja::strat.plot(
+  nav_data,
+  yvar = agebp,
+  # y.tks = agebp,
+  y.rev = TRUE,
+  scale.minmax = TRUE,
+  plot.line=TRUE
+  ,
+  plot.poly=TRUE,
+  plot.bar=FALSE,
+  # col.bar=p.col,
+  scale.percent=FALSE,
+  xSpace=0.02,
+  x.pc.lab=TRUE,
+  x.pc.omit0=TRUE,
+  las=2
+)
+```
+
+## Work still to do
+
+1. Lower bound for pinus is wrong
+2. Vertical axis labels are cropped
+3. Pinus pinaster's name has been changed and is cropped at top of plot
+4. Vertical axis values don't increase linearly. To solve this would involve reindexing the `agebp` values so they increase linearly and interpolating missing values. For the interpolation we can use [`imputeTS::na_interpolation`](https://www.rdocumentation.org/packages/imputeTS/versions/3.0/topics/na_interpolation), but I can't see a straight-forward way to do the reindexing.
+5. Plot a horizontal line at 6000 BP to indicate the arrival of local Neolithic settlement and the beginning of burning.
+6. Add colours to plots

@@ -2,7 +2,7 @@
 .vscode/
 
 # Python fluff
-*/.ipynb_checkpoints/*
+**/.ipynb_checkpoints/*
 */__pycache__/*
 .mypy_cache/
 

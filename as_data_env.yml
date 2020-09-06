@@ -22,6 +22,8 @@ dependencies:
   - pip:
     - pytest
     - mypy
+    - rope
+    - flake8
     - unidecode
     - nlmpy
     - elevation

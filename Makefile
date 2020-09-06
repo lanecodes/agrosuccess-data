@@ -47,6 +47,10 @@ test_data:
 	@echo "Generating data for testing AgroSuccess..."
 	python make_geo_test_data.py
 
+succession_rules:
+	@echo "Serializing succession rules from graph database..."
+	python succession/make_succession_model_file.py
+
 clean:
 	rm -f dem-derived/download_site_elevation_data.py
 	rm -f wind/get_ssite_wind_data.py

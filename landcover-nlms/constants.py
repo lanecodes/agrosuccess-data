@@ -14,17 +14,21 @@ from enum import Enum, unique
 
 @unique
 class AgroSuccessLct(Enum):
-    """Land cover types and corresponding codes used in AgroSuccess."""
+    """Land cover types and corresponding codes used in AgroSuccess.
+
+    Aliases do not correspond to lower case enumeration constants. This is to
+    support consistency with the aliases used in the Java implementation of
+    the AgroSuccess simulation model.
+    """
     WATER_QUARRY = (0, "WaterQuarry")
     BURNT = (1, "Burnt")
-    BARLEY = (2, "Barley")
-    WHEAT = (3, "Wheat")
-    DAL = (4, "DAL")
-    SHRUBLAND = (5, "Shrubland")
-    PINE = (6, "Pine")
-    TRANS_FOREST = (7, "TransForest")
-    DECIDUOUS = (8, "Deciduous")
-    OAK = (9, "Oak")
+    WHEAT = (2, "Wheat")
+    DAL = (3, "DAL")
+    SHRUBLAND = (4, "Shrubland")
+    PINE = (5, "Pine")
+    TRANS_FOREST = (6, "TransForest")
+    DECIDUOUS = (7, "Deciduous")
+    OAK = (8, "Oak")
 
     def __init__(self, code, alias):
         self._code = code

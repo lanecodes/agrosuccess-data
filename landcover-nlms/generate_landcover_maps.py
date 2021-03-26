@@ -36,7 +36,7 @@ SSITE_TREELINES = {
 }
 
 # Number of landscapes to generate for each study site
-N_LANDSCAPES = 5
+N_LANDSCAPES = 100
 
 
 @dataclass

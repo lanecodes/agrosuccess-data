@@ -1,5 +1,7 @@
 # Generate input data for AgroSuccess model
 
+[![DOI](https://zenodo.org/badge/351933244.svg)](https://zenodo.org/badge/latestdoi/351933244)
+
 This project contains all the code needed to generate the input data for the
 study sites considered in the AgroSuccess model.
 

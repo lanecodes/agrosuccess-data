@@ -26,8 +26,8 @@ SSITE_T0 =  pd.Series({'navarres': 7000,
 SSITE_TREELINES = {
     'navarres': 400,
     # c_da_c can't have treeline at 400 m as elevation all above 600 m
-    'charco_da_candieira': 1600,
-    # Lower treeline would require negative shrubland at lower elevation
+    'charco_da_candieira': 1700,
+    # Lower treeline would require ngative shrubland at lower elevation
     'atxuri': 600,
     # All elevation lower than 400 m, no treeline
     'monte_areo_mire': None,
@@ -51,6 +51,7 @@ class InitLctProportions:
     oak: float = 0
     pine: float = 0
     shrubland: float = 0
+    grassland: float = 0
 
     def __post_init__(self):
         total = sum([x for _, x in self.__dict__.items()])
@@ -121,7 +122,7 @@ def create_landscape_matching_proportions(
     if (tree_line is None) ^ (upland_props is None):
         raise ValueError('If tree_line is given, upland_props must be set.')
 
-    ordered_lct_names = ('deciduous', 'oak', 'pine', 'shrubland')
+    ordered_lct_names = ('deciduous', 'oak', 'pine', 'shrubland', 'grassland')
 
     landscape = landscape_generator.match_proportions(
         lct_props=[getattr(target_props, x) for x in ordered_lct_names],
@@ -241,7 +242,7 @@ if __name__ == '__main__':
         tree_line = SSITE_TREELINES[site_code]
         make_landscape_cache(site_output_dir,N_LANDSCAPES, generator,
                              lct_props, tree_line=tree_line,
-                             upland_props=(InitLctProportions(shrubland=1)
+                             upland_props=(InitLctProportions(shrubland=0.5, grassland=0.5)
                                            if tree_line else None))
 
         # generator = LandcoverCacheGenerator(

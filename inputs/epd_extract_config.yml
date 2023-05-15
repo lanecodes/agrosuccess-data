@@ -2,6 +2,7 @@
 queries:
   - site_location_info
   - site_pollen_abundance_ts
+  - pollen_groups
 
 sites:
   - name: Charco da Candieira

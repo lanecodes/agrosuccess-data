@@ -1,0 +1,9 @@
+name: as_data_minimal
+dependencies:
+  - python=3.9
+  - jupyterlab
+  - matplotlib
+  - numpy
+  - pandas
+  - psy-strat
+  - pip

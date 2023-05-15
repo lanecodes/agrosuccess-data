@@ -10,7 +10,8 @@ pollen:
 	sudo chown -R andrew:andrew tmp/epd-query/outputs/
 	[ -d outputs ] || mkdir outputs
 	mv tmp/epd-query/outputs/site_location_info.csv outputs/
-	mv tmp/epd-query/outputs/site_pollen_abundance_ts.csv tmp/
+	mv tmp/epd-query/outputs/site_pollen_abundance_ts.csv outputs/
+	mv tmp/epd-query/outputs/pollen_groups.csv outputs/
 	cd tmp/epd-query; docker-compose down -v
 	sudo rm -rf tmp/epd-query
 	jupyter nbconvert --to python pollen-abundance/make_lct_timeseries.ipynb

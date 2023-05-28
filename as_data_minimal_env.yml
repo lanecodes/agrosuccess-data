@@ -1,9 +1,17 @@
-name: as_data_minimal
+name: as_data_minimal_v2
 dependencies:
   - python=3.9
   - jupyterlab
   - matplotlib
   - numpy
-  - pandas
+  # For compatibility with psy-strat
+  - pandas<=1.5.3
   - psy-strat
   - pip
+  - unidecode
+  - georasters
+  - geopandas
+  - elevation
+  - pyproj
+  - pip:
+    - nlmpy
